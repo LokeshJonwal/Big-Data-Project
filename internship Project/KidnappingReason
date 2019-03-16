@@ -1,0 +1,354 @@
+create table Kidnap(Area_Name String,Year String,Group_Name String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+ row format delimited
+ fields terminated by ','
+ stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/39_Specific_purpose_of_kidnapping_and_abduction.csv' overwrite into table Kidnap;
+
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+create table KidnapPurpose(Year String,Group_Name String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Area_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table KidnapPurpose Partition(Area_Name)
+select Year,Group_Name,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Area_Name from Kidnap;
+
+create table Bihar(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Bihar Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Bihar';
+
+create view reasonBihar as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Kidnappurposereason) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reasonBihar;
+
+create table Andaman_Nicobar_Islands(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Andaman_Nicobar_Islands Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Andaman & Nicobar Islands';
+
+create view reason_Andaman_Nicobar as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Andaman_Nicobar_Islands) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Andaman_Nicobar;
+
+create table Andhra_Pradesh(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Andhra_Pradesh Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Andhra Pradesh';
+
+create view reason_Andhra_Pradesh as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Andhra_Pradesh) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Andhra_Pradesh;
+
+create table Arunachal_Pradesh(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Arunachal_Pradesh Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Arunachal Pradesh';
+
+create view reason_Arunachal_Pradesh as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Arunachal_Pradesh) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Arunachal_Pradesh;
+
+create table Assam(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Assam Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Assam';
+
+create view reason_Assam as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Assam) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Assam;
+
+create table Delhi(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Delhi Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Delhi';
+
+create view reason_Dehli as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Delhi) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Delhi;
+
+create table Gujarat(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Gujarat Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Gujarat';
+
+create view reason_Gujarat as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Gujarat) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Gujarat;
+
+create table Goa(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Goa Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Goa';
+
+create view reason_Goa as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Goa) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Goa;
+
+create table Haryana(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Haryana Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Haryana';
+
+create view reason_Haryana as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Haryana) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Haryana;
+
+create table Rajasthan(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Rajasthan Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Rajasthan';
+
+create view reason_Rajasthan as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Rajasthan) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Rajasthan;
+
+create table Jammu_kashmir(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Jammu_Kashmir Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Jammu & Kashmir';
+
+create view reason_Jammu_Kashmir as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Jammu_Kashmir) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Jammu_Kashmir;
+
+create table Karnataka(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Karnataka Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Karnataka';
+
+create view reason_Karnataka as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Karnataka) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Karnataka;
+
+create table Jharkhand(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table Jharkhand Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Jharkhand';
+
+create view reason_Jharkhand as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from Jharkhand) temp
+group by group_name
+order by RegisteredCases Desc
+
+select * from reason_Jharkhand;
+
+create table UttarPradesh(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table UttarPradesh Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Uttar Pradesh';
+
+create view reason_Uttar_Pradesh as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from UttarPradesh) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Uttar_Pradesh;
+
+create table MadhyaPradesh(Year String,Sub_Group_Name String,K_A_Cases_Reported String,K_A_Female_10_15_Years String,K_A_Female_15_18_Years String,K_A_Female_18_30_Years String,K_A_Female_30_50_Years String,K_A_Female_Above_50_Years String,K_A_Female_Total String,K_A_Female_Upto_10_Years String,K_A_Grand_Total String,K_A_Male_10_15_Years String,K_A_Male_15_18_Years String,K_A_Male_18_30_Years String,K_A_Male_30_50_Years String,K_A_Male_Above_50_Years String,K_A_Male_Total String,K_A_Male_Upto_10_Years String)
+partitioned by(Group_Name String)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+insert overwrite table MadhyaPradesh Partition(Group_Name)
+select Year,Sub_Group_Name,K_A_Cases_Reported,
+K_A_Female_10_15_Years,K_A_Female_15_18_Years,
+K_A_Female_18_30_Years,K_A_Female_30_50_Years,
+K_A_Female_Above_50_Years,K_A_Female_Total,K_A_Female_Upto_10_Years,
+K_A_Grand_Total,K_A_Male_10_15_Years,K_A_Male_15_18_Years,K_A_Male_18_30_Years,K_A_Male_30_50_Years,
+K_A_Male_Above_50_Years,K_A_Male_Total,K_A_Male_Upto_10_Years,Group_Name from Kidnappurpose where Area_Name = 'Madhya Pradesh';
+
+create view reason_Madhya_Pradesh as 
+select group_name , sum(K_A_Cases_Reported) as RegisteredCases 
+from (select group_name , K_A_Cases_Reported from MadhyaPradesh) temp
+group by group_name
+order by RegisteredCases Desc;
+
+select * from reason_Madhya_Pradesh;
+
+

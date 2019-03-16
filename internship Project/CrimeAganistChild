@@ -1,0 +1,53 @@
+create table Children2012Data (STATE string,DISTRICT string,Yearwise int,Murder int,
+Rape int,KidnappingandAbduction int,Foeticide int,Abetmentofsuicide int,Exposureandabandonment int,Procurationofminorgirls int
+,Buyingofgirlsforprostitution int,Sellingofgirlsforprostitution int,
+Prohibitionofchildmarriageact int,OtherCrimes  int,Total int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data inpath '/user/cloudera/crime-in-india/03_District_wise_crimes_committed_against_children_2001_2012.csv' overwrite into table children2012data;
+
+create table Children2013Data (STATE string,DISTRICT string,Yearwise int,Murder int,
+Rape int,KidnappingandAbduction int,Foeticide int,Abetmentofsuicide int,Exposureandabandonment int,Procurationofminorgirls int
+,Buyingofgirlsforprostitution int,Sellingofgirlsforprostitution int,
+Prohibitionofchildmarriageact int,OtherCrimes  int,Total int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data inpath '/user/cloudera/crime-in-india/03_District_wise_crimes_committed_against_children_2013.csv' overwrite into table children2013data;
+
+<---create view combinedata as
+select state,total from children2012data 
+union all
+select state,total from children2013data;--->
+
+<---create view CountStateViseCrime  as
+select State , sum (Total) as CrimeAgainst
+from combinedata
+group by state
+order by CrimeAgainst DESC;---->
+
+,----select State,Sum(crimeagainst) from CountStateViseCrime
+group by state;---->
+
+create view r1 as
+select State , sum(Total) as t1
+from Children2012Data
+group by State
+order by t1;
+
+select * from r1 where t1 > 90000;
+
+create view r2 as
+select UnionState , sum(Total) as t2
+from Children2013Data
+group by State
+order by t2;
+
+select * from r2 where t2 > 7000;
+
+
+
+

@@ -1,0 +1,20 @@
+create table PoliceData(State string,Year int,Sub_group string,Cases_Registered int,Cases_Reported_for_DeptAction int,Cases_Declared_False int,Complaints_Received int,No_of_Departmental_Enquiries int,No_of_Magisterial_Enquiries int,Cases_Sent_for_Trials int,No_of_Judicial_Enquiries int,Police_Personnel_Acquitted int,Police_Personnel_Convicted int,Police_Personnel_sent_up_for_Trial int,Police_Personnel_Trial_Completed int,Police_Personnel_Cases_Withdrawn int,Police_personnel_Cases_Trial_Completed int,Police_Personnel_disposed int,Police_Personnel_Disciplinary_Action_Initiated int,Police_Personnel_Dismissal_Removal_from_Service int,Police_Personnel_Major_Punishment_awarded int,Police_Personnel_Minor_Punishment_awarded int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/25_Complaints_against_police.csv' overwrite into table PoliceData;
+
+select * from PoliceData;
+
+create view if not exists state_complaints as
+select State , sum(Cases_Registered) as CountCases,avg(Cases_Registered) as AvgCountComplaints
+from PoliceData
+Group by State
+Order by AvgCountComplaints desc;
+
+select * from state_complaints where countcases >23000;
+
+
+
+ 

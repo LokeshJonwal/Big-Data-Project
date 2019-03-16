@@ -1,0 +1,18 @@
+create table EducationData (Area_Name String,Year int,Sub_Group_Name String,Education_Above_Primary_but_below_Matric_or_Higher_Secondary int,Education_Illiterate int,Education_Matric_or_Higher_Secondary__above int,Education_Total int,Education_Upto_primary int)
+ row format delimited
+ fields terminated by ','
+ stored as textFile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/18_01_Juveniles_arrested_Education.csv' overwrite into table EducationData;
+
+create view FinalData as
+select Sub_Group_Name,SUM(Education_Above_Primary_but_below_Matric_or_Higher_Secondary) as belowMatric,SUM(Education_Illiterate) as Illiterate ,SUM(Education_Matric_or_Higher_Secondary__above) as AboveMatric ,SUM(Education_Upto_primary) as uptoPrimary
+from EducationData
+group by Sub_Group_Name
+Order By belowMatric,
+Illiterate,
+AboveMatric,
+uptoPrimary  DESC;
+
+select * from finalData;
+

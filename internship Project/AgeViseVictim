@@ -1,0 +1,40 @@
+create table ageViseVictim (State string,yearwise int,Group_Name string,Sub_Group_Name string,Victims_Above_50 int,Victims_Total int,Victims_Upto_10_15_Yrs int,Victims_Upto_10_Yrsv int,Victims_Upto_15_18_Yrs int,Victims_Upto_18_30_Yrs int,Victims_Upto_30_50_Yrs int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/32_Murder_victim_age_sex.csv' overwrite into table ageViseVictim;
+
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+create table MurderVictim (State string,year int,Sub_Group_Name string,Victims_Above_50 int,Victims_Total int,Victims_Upto_10_15_Yrs int,Victims_Upto_10_Yrsv int,Victims_Upto_15_18_Yrs int,Victims_Upto_18_30_Yrs int,Victims_Upto_30_50_Yrs int)
+partitioned by (Group_Name string)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+INSERT OVERWRITE TABLE MurderVictim PARTITION(Group_Name)
+SELECT State ,yearwise,Sub_Group_Name,Victims_Above_50 ,
+Victims_Total ,Victims_Upto_10_15_Yrs,Victims_Upto_10_Yrsv ,
+Victims_Upto_15_18_Yrs,
+Victims_Upto_18_30_Yrs,Victims_Upto_30_50_Yrs ,Group_Name  from ageViseVictim;
+
+create table AgeWiseMaleFemaleVictim (Group_Name string,Victims_Above_50 int,Victims_Upto_10_15_Yrs int,Victims_Upto_10_Yrsv int,Victims_Upto_15_18_Yrs int,Victims_Upto_18_30_Yrs int,Victims_Upto_30_50_Yrs int,Victims_Total int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+create view  MalefemaleVictim as 
+select group_name as Sex,sum(Victims_Above_50) as Above50years,sum(Victims_Upto_10_15_Yrs) as Upto10To15years, sum(Victims_Upto_10_Yrsv) as Upto10years,sum(Victims_Upto_15_18_Yrs) as Upto15To18years,sum(Victims_Upto_18_30_Yrs) as Upto18to30years , sum(Victims_Upto_30_50_Yrs) as Upto30To50years, sum(Victims_Total) as TotalVictim  
+from (select group_name,Victims_Above_50,
+Victims_Upto_10_15_Yrs,Victims_Upto_10_Yrsv,
+Victims_Upto_15_18_Yrs,Victims_Upto_18_30_Yrs,Victims_Upto_30_50_Yrs,
+Victims_Total from murdervictim) temp
+group by group_name; 
+
+insert into table AgeWiseMaleFemaleVictim 
+select * from malefemalevictim;
+
+
+
+

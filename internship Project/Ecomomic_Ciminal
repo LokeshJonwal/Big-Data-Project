@@ -1,0 +1,16 @@
+create table EconomicData (Area_Name String,Year int,Sub_Group_Name String,Annual_Income_250001_to_50000 int,Annual_Income_upto_Rs_25000 int,
+Middle_income_from_100001_to_200000 int,Middle_income_from_50001_to_100000 int,Economic_Set_up_Total int,
+Upper_income_above_Rs_300000 int,Upper_middle_income_from_200001_to_300000 int)
+ row format delimited
+ fields terminated by ','
+ stored as textFile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/18_02_Juveniles_arrested_Economic_setup.csv' overwrite into table EconomicData;
+
+create view FinalEconomicData as
+select Sub_Group_Name,SUM(Annual_Income_250001_to_50000),SUM(Annual_Income_upto_Rs_25000) ,SUM(Middle_income_from_100001_to_200000),SUM(Middle_income_from_50001_to_100000),SUM(Upper_income_above_Rs_300000),SUM(Upper_middle_income_from_200001_to_300000)
+from EconomicData
+group by Sub_Group_Name;
+
+select * from FinalEconomicData;
+

@@ -1,0 +1,14 @@
+create table OffendersKnownVictim (Area_Name String,Year int,No_of_Cases_in_which_offenders_were_known_to_the_Victims int,No_of_Cases_in_which_offenders_were_Neighbours int,No_of_Cases_in_which_offenders_were_Other_Known_persons int,No_of_Cases_in_which_offenders_were_Parentsclose_family_members int,No_of_Cases_in_which_offenders_were_Relatives int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/21_Offenders_known_to_the_victim.csv' overwrite into table OffendersKnownVictim;
+
+create view KnownVictim as
+select Area_Name,Sum(No_of_Cases_in_which_offenders_were_known_to_the_Victims),Sum(No_of_Cases_in_which_offenders_were_Neighbours),Sum(No_of_Cases_in_which_offenders_were_Other_Known_persons),Sum(No_of_Cases_in_which_offenders_were_Parentsclose_family_members),Sum(No_of_Cases_in_which_offenders_were_Relatives)
+from OffendersKnownVictim
+group by Area_Name;
+
+select * from KnownVictim;
+

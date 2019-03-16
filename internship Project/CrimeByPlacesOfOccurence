@@ -1,0 +1,13 @@
+create table CrimeByOccurence (STATE String,YEAR int,RESIDENTIAL_PREMISES_Dacoity int,RESIDENTIAL_PREMISES_Robbery int,RESIDENTIAL_PREMISES_Burglary int,RESIDENTIAL_PREMISES_Theft int,HIGHWAYS_Dacoity int,HIGHWAYS_Robbery int,HIGHWAYS_Burglary int,HIGHWAYS_Theft int,RIVER_SEA_Dacoity int,RIVER_SEA_Robbery int,RIVER_SEA_Burglary int,RIVER_SEA_Theft int,RAILWAYS_Dacoity int,RAILWAYS_Robbery int,RAILWAYS_Burglary int,RAILWAYS_Theft int,BANKS_Dacoity int,BANKS_Robbery int,BANKS_Burglary int,BANKS_Theft int,COMMERCIAL_ESTABLISHMENTS_Dacoity int,COMMERCIAL_ESTABLISHMENTS_Robbery int,COMMERCIAL_ESTABLISHMENTS_Burglary int,COMMERCIAL_ESTABLISHMENTS_Theft int,OTHER_PLACES_Dacoity int,OTHER_PLACES_Robbery int,OTHER_PLACES_Burglary int,OTHER_PLACES_Theft int,TOTAL_Dacoity int,TOTAL_Robbery int,TOTAL_Burglary int,TOTAL_Theft int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/17_Crime_by_place_of_occurrence_2001_2012.csv' overwrite into table CrimeByOccurence;
+
+create view CrimeByPlace as
+select State,sum(RESIDENTIAL_PREMISES_Dacoity) as RESIDENTIAL_PREMISES_Dacoity  ,Sum(RESIDENTIAL_PREMISES_Robbery)  asRESIDENTIAL_PREMISES_Robbery,sum(RESIDENTIAL_PREMISES_Burglary) as RESIDENTIAL_PREMISES_Burglary ,sum(RESIDENTIAL_PREMISES_Theft ) as RESIDENTIAL_PREMISES_Theft,sum(HIGHWAYS_Dacoity) as HIGHWAYS_Dacoity ,sum(HIGHWAYS_Robbery) as HIGHWAYS_Robbery ,sum(HIGHWAYS_Burglary) as HIGHWAYS_Burglary,sum(HIGHWAYS_Theft) as HIGHWAYS_Theft,sum(RIVER_SEA_Dacoity) as RIVER_SEA_Dacoity,sum(RIVER_SEA_Robbery)  as RIVER_SEA_Robbery,sum(RIVER_SEA_Burglary) as RIVER_SEA_Burglary,sum(RIVER_SEA_Theft) as RIVER_SEA_Theft,sum(RAILWAYS_Dacoity) as RAILWAYS_Dacoity ,sum(RAILWAYS_Robbery) as RAILWAYS_Robbery,sum(RAILWAYS_Burglary) as RAILWAYS_Burglary,sum(RAILWAYS_Theft) as RAILWAYS_Theft,sum(BANKS_Dacoity) as BANKS_Dacoity,sum(BANKS_Robbery) as BANKS_Robbery ,sum(BANKS_Burglary) as BANKS_Burglary ,sum(BANKS_Theft)  as BANKS_Theft,sum(COMMERCIAL_ESTABLISHMENTS_Dacoity) as COMMERCIAL_ESTABLISHMENTS_Dacoity ,sum(COMMERCIAL_ESTABLISHMENTS_Robbery) as COMMERCIAL_ESTABLISHMENTS_Robbery,sum(COMMERCIAL_ESTABLISHMENTS_Burglary) as COMMERCIAL_ESTABLISHMENTS_Burglary, sum(COMMERCIAL_ESTABLISHMENTS_Theft) as COMMERCIAL_ESTABLISHMENTS_Theft,sum(OTHER_PLACES_Dacoity) as OTHER_PLACES_Dacoity ,sum(OTHER_PLACES_Robbery) as OTHER_PLACES_Robbery ,sum(OTHER_PLACES_Burglary) as OTHER_PLACES_Burglary ,sum(OTHER_PLACES_Theft) as  OTHER_PLACES_Theft,sum(TOTAL_Dacoity) as TOTAL_Dacoity,sum(TOTAL_Robbery) as TOTAL_Robbery ,sum(TOTAL_Burglary) as TOTAL_Burglary, sum(TOTAL_Theft) as TOTAL_Theft
+from CrimeByOccurence
+group by State;
+
+select * from CrimeByPlace;

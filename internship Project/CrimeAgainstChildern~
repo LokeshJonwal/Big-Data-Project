@@ -1,0 +1,20 @@
+ChildrenData = Load '/user/cloudera/crime-in-india/03_District_wise_crimes_committed_against_children_2001_2012.csv' using PigStorage(',') As 
+(STATE:chararray,DISTRICT:chararray,Year:int,Murder:int,
+Rape:int,KidnappingandAbduction:int,Foeticide:int,Abetmentofsuicide:int,Exposureandabandonment:int,Procurationofminorgirls:int
+,Buyingofgirlsforprostitution:int,Sellingofgirlsforprostitution:int,
+Prohibitionofchildmarriageact:int,OtherCrimes:int,Total:int); 
+
+Dump ChildrenData;
+
+
+ChildrenDataOther = Load '/user/cloudera/crime-in-india/03_District_wise_crimes_committed_against_children_2013.csv' using PigStorage(',') As 
+(STATE:chararray,DISTRICT:chararray,Year:int,Murder:int,
+Rape:int,KidnappingandAbduction:int,Foeticide:int,Abetmentofsuicide:int,Exposureandabandonment:int,Procurationofminorgirls:int,Buyingofgirlsforprostitution:int,Sellingofgirlsforprostitution:int,Prohibitionofchildmarriageact:int,OtherCrimes:int,Total:int); 
+
+DUMP ChildrenDataOther;
+
+
+
+
+
+

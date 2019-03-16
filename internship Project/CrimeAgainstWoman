@@ -1,0 +1,23 @@
+create table CrimeAgainstWomen2014(States String,District String,Year int,Rape int,
+CustodialRape int,CustodialGangRape int,CustodialOtherRape int,RapeotherthanCustodial int,RapeGangRape int,RapeOthers int,AttempttocommitRape int,KidnappingAbductionTotal int,KidnapingAbduction int,KidnapingAbductioninordertoMurder int,KidnappingforRansom int,KidnappingAbductionofWomentocompelherformarriage
+int,KidnapingAbductionOthers int,DowryDeaths int,AssaultonWomenwithintenttooutrageherModestyTotal int,SexualHarassment int,AssaultonwomenwithintenttoDisrobe int,Voyeurism int,Stalking int,Others int,InsulttotheModestyofWomenTotal int,AtOfficepremises int,Inplacesrelatedtowork int,InPublicTransportsystem int,InotherPlaces int,CrueltybyHusbandorhisRelatives int,ImportationofGirlsfromForeignCountry int,Murder int,AttempttocommitMurder int,CulpableHomicidenotamountingtoMurder int,AttempttocommitCulpableHomicide int,GrievousHurt int,Hurt int,Acidattack int,
+AttempttoAcidAttack int,
+Deathscausedwithintenttocausemiscarriage int,
+Causingmiscarriagewithoutconsentofwomen int,
+DacoityTotal int,DacoitywithMurder int,OtherDacoity int,Robbery int,Arson int,HumanTrafficking int,AbetmentofSuicidesofWomen int,
+UnNaturalOffences int,OtherIPCCrimes int,DowryProhibitionAct1961 int,
+IndecentRepresentationofWomenAct1986 int,CommissionofSatiPreventionAct1987 int,ProtectionofWomenfromDomesticViolenceAct2005 int,ImmoralTrafficPreventionAct int,ITPUnderSection5 int,ITPUnderSection6 int,
+ITPUnderSection7 int,ITPUnderSectio8 int,ITPUnderOtherSections int,OtherSLLCrimesagainstWomen int,TotalCrimesagainstWomen int)
+row format delimited
+fields terminated by ','
+stored as textfile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/42_District_wise_crimes_committed_against_women_2014.csv' overwrite into table CrimeAgainstWomen2014;
+
+create view Women as
+select States , Sum(TotalCrimesagainstWomen) as TotalCrimeAgainstWomen2014
+from CrimeAgainstWomen2014
+group by States
+order by TotalCrimeAgainstWomen2014
+
+select * from Women where TotalCrimeAgainstWomen2014 > 110000;

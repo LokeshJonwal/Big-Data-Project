@@ -1,0 +1,16 @@
+create table FamilyData(Area_Name String,Year int, 
+Sub_Group_Name String , Family_back_ground_Homeless int,
+Family_back_ground_Living_with_guardian int,
+Family_back_ground_Living_with_parents int,Family_back_ground_Total int)
+row format delimited
+fields terminated by ','
+stored as textFile;
+
+load data local inpath '/home/cloudera/Desktop/crime-in-india/crime/18_03_Juveniles_arrested_Family_background.csv' overwrite into table EconomicData;
+
+create view FinalFamilyData as
+select Sub_Group_Name,SUM(Family_back_ground_Homeless) as Homeless,SUM(Family_back_ground_Living_with_guardian) as LivingWithGuardian ,SUM(Family_back_ground_Living_with_parents) as LivingWithParent
+from FamilyData
+group by Sub_Group_Name;
+
+select * from FinalFamilyData;
